@@ -1,6 +1,14 @@
 // Importeer Express
 import express from 'express';
+import authRoutes from "./routes/authRoutes.js";
 
+
+
+
+
+
+
+app.use("/api/auth", authRoutes);
 // Maak Express app
 const app = express();
 
