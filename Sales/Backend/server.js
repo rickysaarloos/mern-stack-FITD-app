@@ -1,24 +1,27 @@
-// Importeer Express
 import express from 'express';
+import mongoose from 'mongoose';
+import authRoutes from './src/routes/authRoutes.js';
+import dotenv from 'dotenv';
 
-// Maak Express app
+dotenv.config();
+
 const app = express();
-
-// Haal PORT uit .env (of gebruik 4000)
 const PORT = process.env.PORT || 4000;
 
-// Middleware: lees JSON
+
 app.use(express.json());
 
-// Test route - reageer op GET /
+app.use('/api/auth', authRoutes);
+
 app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Mijn eerste backend!',
-    success: true
-  });
+  res.json({ message: 'FITD backend draait 🚀' });
 });
 
-// Start de server
-app.listen(PORT, () => {
-  console.log(`Server draait op http://localhost:${PORT}`);
-});
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server draait op http://localhost:${PORT}`);
+    });
+    console.log('MongoDB connected');
+  })
+  .catch(err => console.log(err));
