@@ -1,35 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Login from "./components/login";
+import Register from "./components/Register";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [token, setToken] = useState(
+    localStorage.getItem("token")
+  );
+  const [showRegister, setShowRegister] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-black flex items-center justify-center text-gray-200">
+      <div className="w-full max-w-md bg-zinc-900 p-6 rounded-2xl shadow-xl">
+
+        {!token ? (
+          <>
+            {showRegister ? (
+              <>
+                <Register setToken={setToken} />
+
+                <p className="text-sm text-center mt-4 text-gray-400">
+                  Al een account?
+                  <button
+                    onClick={() => setShowRegister(false)}
+                    className="ml-2 text-purple-400 hover:underline"
+                  >
+                    Inloggen
+                  </button>
+                </p>
+              </>
+            ) : (
+              <>
+                <Login setToken={setToken} />
+
+                <p className="text-sm text-center mt-4 text-gray-400">
+                  Nog geen account?
+                  <button
+                    onClick={() => setShowRegister(true)}
+                    className="ml-2 text-purple-400 hover:underline"
+                  >
+                    Registreren
+                  </button>
+                </p>
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold text-purple-400 text-center">
+              Welkom bij FITD 👕
+            </h2>
+
+            <p className="text-center text-gray-400 mt-2">
+              Je bent ingelogd
+            </p>
+
+            <button
+              onClick={handleLogout}
+              className="mt-6 w-full bg-purple-700 hover:bg-purple-600 py-2 rounded-lg"
+            >
+              Uitloggen
+            </button>
+          </>
+        )}
+
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
