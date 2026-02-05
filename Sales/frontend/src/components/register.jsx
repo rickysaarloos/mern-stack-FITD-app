@@ -1,46 +1,52 @@
-import { useState } from 'react';
+import { useState, useContext } from "react";
+import { AuthContext } from "./context/authContext";
 
-function Register({ setToken }) {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+function Register() {
+  const { login } = useContext(AuthContext);
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (password.length < 6) {
-      setError('Wachtwoord moet minimaal 6 tekens zijn');
+      setError("Wachtwoord moet minimaal 6 tekens zijn");
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:4000/api/auth/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:4000/api/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email, password })
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Registratie mislukt');
+        setError(data.error || "Registratie mislukt");
         return;
       }
 
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
+      // 👉 centraal login via context
+      login(data.token);
 
     } catch (err) {
-      setError('Server error');
+      setError("Server error");
     }
   };
 
   return (
-    <form className="bg-zinc-900 p-6 rounded-xl space-y-4" onSubmit={handleRegister}>
+    <form
+      className="bg-zinc-900 p-6 rounded-xl space-y-4"
+      onSubmit={handleRegister}
+    >
       <h2 className="text-2xl font-bold text-center text-orange-400">
         Registreren
       </h2>
@@ -76,7 +82,9 @@ function Register({ setToken }) {
         Registreren
       </button>
 
-      {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+      {error && (
+        <p className="text-red-400 text-sm text-center">{error}</p>
+      )}
     </form>
   );
 }

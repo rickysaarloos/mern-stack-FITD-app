@@ -1,33 +1,36 @@
-import { useState } from 'react';
+import { useState, useContext } from "react";
+import { AuthContext } from "./context/authContext";
 
-function Login({ setToken }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+function Login() {
+  const { login } = useContext(AuthContext);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('http://localhost:4000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+      const response = await fetch("http://localhost:4000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error);
+        setError(data.error || "Inloggen mislukt");
         return;
       }
 
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
+      // 👉 centraal login via context
+      login(data.token);
 
     } catch (err) {
-      setError('Server niet bereikbaar');
+      setError("Server niet bereikbaar");
     }
   };
 
