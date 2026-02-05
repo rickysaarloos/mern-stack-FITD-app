@@ -1,5 +1,4 @@
 import { useState, useContext } from "react";
-import { AuthContext } from "../context/authContext";
 import { AuthContext } from "../context/AuthContext";
 
 function Register() {
@@ -22,9 +21,7 @@ function Register() {
     try {
       const response = await fetch("http://localhost:4000/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
       });
 
@@ -35,18 +32,16 @@ function Register() {
         return;
       }
 
-      // 👉 centraal login via context
-      login(data.token);
-
-    } catch (err) {
+      login(data.token); // ✅ centraal via context
+    } catch {
       setError("Server error");
     }
   };
 
   return (
     <form
-      className="bg-zinc-900 p-6 rounded-xl space-y-4"
       onSubmit={handleRegister}
+      className="bg-zinc-900 p-6 rounded-xl space-y-4"
     >
       <h2 className="text-2xl font-bold text-center text-orange-400">
         Registreren
@@ -57,8 +52,8 @@ function Register() {
         placeholder="Gebruikersnaam"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        required
         className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
+        required
       />
 
       <input
@@ -66,8 +61,8 @@ function Register() {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        required
         className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
+        required
       />
 
       <input
@@ -75,8 +70,8 @@ function Register() {
         placeholder="Wachtwoord (min. 6 tekens)"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        required
         className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
+        required
       />
 
       <button className="w-full bg-orange-600 hover:bg-orange-500 text-white font-semibold py-2 rounded">

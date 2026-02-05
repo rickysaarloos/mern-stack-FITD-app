@@ -33,17 +33,6 @@ function Home() {
 
               <Link
                 to="/register"
-
-              <a
-  href="/profile"
-  className="mt-4 inline-block text-purple-400 hover:underline"
->
-  Naar mijn profiel
-</a>
-
-
-              <a
-                href="/register"
                 className="border border-purple-500 px-4 py-2 rounded-lg hover:bg-purple-900"
               >
                 Registreren
@@ -61,6 +50,13 @@ function Home() {
               className="mt-4 block bg-green-600 hover:bg-green-500 py-2 rounded-lg"
             >
               ➕ Item plaatsen
+            </Link>
+
+            <Link
+              to="/profile"
+              className="mt-3 inline-block text-purple-400 hover:underline"
+            >
+              Naar mijn profiel
             </Link>
 
             <button

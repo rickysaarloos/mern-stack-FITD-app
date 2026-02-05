@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext"; // ✅ let op: juist pad
+import { Link } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -26,7 +27,6 @@ function Login() {
         return;
       }
 
-      // Login via context
       login(data.token);
     } catch (err) {
       setError("Server niet bereikbaar");
@@ -34,15 +34,21 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-4">
-      <h2 className="text-xl font-bold">Inloggen</h2>
+    <form
+      onSubmit={handleLogin}
+      className="bg-zinc-900 p-6 rounded-xl space-y-4 max-w-md mx-auto"
+    >
+      <h2 className="text-2xl font-bold text-center text-purple-400">
+        Inloggen
+      </h2>
 
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 w-full"
+        required
+        className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
       />
 
       <input
@@ -50,14 +56,33 @@ function Login() {
         placeholder="Wachtwoord"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="border p-2 w-full"
+        required
+        className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
       />
 
-      <button type="submit" className="bg-blue-500 text-white p-2 w-full">
+      <button
+        type="submit"
+        className="w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 rounded"
+      >
         Inloggen
       </button>
 
-      {error && <p className="text-red-500">{error}</p>}
+      {/* 👉 link naar registreren */}
+      <p className="text-center text-sm text-gray-400">
+        Nog geen account?{" "}
+        <Link
+          to="/register"
+          className="text-purple-400 hover:underline"
+        >
+          Registreren
+        </Link>
+      </p>
+
+      {error && (
+        <p className="text-red-400 text-sm text-center">
+          {error}
+        </p>
+      )}
     </form>
   );
 }

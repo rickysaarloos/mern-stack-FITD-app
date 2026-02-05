@@ -1,16 +1,18 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
+import { AuthContext } from "./context/authContext";
 
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import CreateItem from "./components/CreateItem";
-
-const PrivateRoute = ({ token, children }) => {
-  return token ? children : <Navigate to="/login" />;
-};
 import Profile from "./pages/Profile";
+
+// 🔐 Private route wrapper
+function PrivateRoute({ children }) {
+  const { token } = useContext(AuthContext);
+  return token ? children : <Navigate to="/login" />;
+}
 
 function App() {
   const { token } = useContext(AuthContext);
@@ -18,13 +20,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* HOME */}
         <Route path="/" element={<Home />} />
 
-        <Route
-          path="/"
-          element={<Home token={token} setToken={setToken} />}
-        />
-
+        {/* AUTH */}
         <Route
           path="/login"
           element={token ? <Navigate to="/" /> : <Login />}
@@ -35,20 +35,26 @@ function App() {
           element={token ? <Navigate to="/" /> : <Register />}
         />
 
-        {/* 🔐 ALLEEN INGELOGD */}
+        {/* 🔐 ITEM PLAATSEN */}
         <Route
           path="/items/new"
           element={
-            <PrivateRoute token={token}>
+            <PrivateRoute>
               <CreateItem />
             </PrivateRoute>
           }
         />
 
+        {/* 🔐 PROFIEL */}
         <Route
           path="/profile"
-          element={token ? <Profile /> : <Navigate to="/login" />}
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
         />
+
       </Routes>
     </BrowserRouter>
   );
