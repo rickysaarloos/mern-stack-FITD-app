@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -8,15 +10,15 @@ import CreateItem from "./components/CreateItem";
 const PrivateRoute = ({ token, children }) => {
   return token ? children : <Navigate to="/login" />;
 };
+import Profile from "./pages/Profile";
 
 function App() {
-  const [token, setToken] = useState(
-    localStorage.getItem("token")
-  );
+  const { token } = useContext(AuthContext);
 
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
 
         <Route
           path="/"
@@ -25,16 +27,12 @@ function App() {
 
         <Route
           path="/login"
-          element={
-            token ? <Navigate to="/" /> : <Login setToken={setToken} />
-          }
+          element={token ? <Navigate to="/" /> : <Login />}
         />
 
         <Route
           path="/register"
-          element={
-            token ? <Navigate to="/" /> : <Register setToken={setToken} />
-          }
+          element={token ? <Navigate to="/" /> : <Register />}
         />
 
         {/* 🔐 ALLEEN INGELOGD */}
@@ -47,6 +45,10 @@ function App() {
           }
         />
 
+        <Route
+          path="/profile"
+          element={token ? <Profile /> : <Navigate to="/login" />}
+        />
       </Routes>
     </BrowserRouter>
   );

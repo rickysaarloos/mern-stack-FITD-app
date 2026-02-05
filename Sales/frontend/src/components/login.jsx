@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../context/AuthContext"; // ✅ let op: juist pad
 
 function Login() {
   const { login } = useContext(AuthContext);
@@ -26,9 +26,8 @@ function Login() {
         return;
       }
 
-      // 👉 centraal login via context
+      // Login via context
       login(data.token);
-
     } catch (err) {
       setError("Server niet bereikbaar");
     }
@@ -43,6 +42,7 @@ function Login() {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        className="border p-2 w-full"
       />
 
       <input
@@ -50,9 +50,12 @@ function Login() {
         placeholder="Wachtwoord"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        className="border p-2 w-full"
       />
 
-      <button type="submit">Inloggen</button>
+      <button type="submit" className="bg-blue-500 text-white p-2 w-full">
+        Inloggen
+      </button>
 
       {error && <p className="text-red-500">{error}</p>}
     </form>

@@ -33,6 +33,17 @@ function Home() {
 
               <Link
                 to="/register"
+
+              <a
+  href="/profile"
+  className="mt-4 inline-block text-purple-400 hover:underline"
+>
+  Naar mijn profiel
+</a>
+
+
+              <a
+                href="/register"
                 className="border border-purple-500 px-4 py-2 rounded-lg hover:bg-purple-900"
               >
                 Registreren
