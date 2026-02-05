@@ -1,40 +1,34 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+
 import Home from "./pages/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Profile from "./pages/Profile";
 
 function App() {
-  const [token, setToken] = useState(
-    localStorage.getItem("token")
-  );
+  const { token } = useContext(AuthContext);
 
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
 
-        {/* HOME – publiek toegankelijk */}
-        <Route
-          path="/"
-          element={<Home token={token} setToken={setToken} />}
-        />
-
-        {/* LOGIN – alleen als je NIET bent ingelogd */}
         <Route
           path="/login"
-          element={
-            token ? <Navigate to="/" /> : <Login setToken={setToken} />
-          }
+          element={token ? <Navigate to="/" /> : <Login />}
         />
 
-        {/* REGISTER – alleen als je NIET bent ingelogd */}
         <Route
           path="/register"
-          element={
-            token ? <Navigate to="/" /> : <Register setToken={setToken} />
-          }
+          element={token ? <Navigate to="/" /> : <Register />}
         />
 
+        <Route
+          path="/profile"
+          element={token ? <Profile /> : <Navigate to="/login" />}
+        />
       </Routes>
     </BrowserRouter>
   );
