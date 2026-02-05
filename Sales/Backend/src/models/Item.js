@@ -10,7 +10,6 @@ const itemSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
-      trim: true,
     },
     description: {
       type: String,
@@ -19,15 +18,13 @@ const itemSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
-      min: 0,
     },
-    size: String,
     brand: String,
     images: [String],
     status: {
       type: String,
-      enum: ["te_koop", "verkocht"],
-      default: "te_koop",
+      enum: ["te koop", "verkocht"],
+      default: "te koop",
     },
   },
   { timestamps: true }
