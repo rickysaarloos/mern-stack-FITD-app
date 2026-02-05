@@ -1,6 +1,6 @@
 import Item from "../models/Item.js";
 
-// ➕ item aanmaken
+/* ➕ CREATE */
 export const createItem = async (req, res) => {
   try {
     const { title, description, price, brand } = req.body;
@@ -24,17 +24,17 @@ export const createItem = async (req, res) => {
 
     res.status(201).json(item);
   } catch (error) {
-    res.status(500).json({ error: "Item aanmaken mislukt" });
+    res.status(500).json({ error: "Server error" });
   }
 };
 
-// 📦 eigen items ophalen
+/* 📦 READ */
 export const getMyItems = async (req, res) => {
   const items = await Item.find({ seller: req.user._id }).sort("-createdAt");
   res.json(items);
 };
 
-// ✏️ ITEM BEWERKEN (US-06)
+/* ✏️ UPDATE */
 export const updateItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -43,7 +43,7 @@ export const updateItem = async (req, res) => {
       return res.status(404).json({ error: "Item niet gevonden" });
     }
 
-    // 🔐 alleen eigenaar
+    // alleen eigenaar mag bewerken
     if (item.seller.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: "Geen toegang" });
     }
@@ -52,11 +52,30 @@ export const updateItem = async (req, res) => {
     item.description = req.body.description ?? item.description;
     item.price = req.body.price ?? item.price;
     item.brand = req.body.brand ?? item.brand;
-    item.status = req.body.status ?? item.status;
 
-    await item.save();
-    res.json(item);
+    const updatedItem = await item.save();
+    res.json(updatedItem);
   } catch (error) {
-    res.status(500).json({ error: "Item bewerken mislukt" });
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+/* 🗑️ DELETE */
+export const deleteItem = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+
+    if (!item) {
+      return res.status(404).json({ error: "Item niet gevonden" });
+    }
+
+    if (item.seller.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ error: "Geen toegang" });
+    }
+
+    await item.deleteOne();
+    res.json({ message: "Item verwijderd" });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
   }
 };

@@ -19,8 +19,14 @@ const itemSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    brand: String,
-    images: [String],
+    brand: {
+      type: String,
+    },
+    images: [
+      {
+        type: String,
+      },
+    ],
     status: {
       type: String,
       enum: ["te koop", "verkocht"],
