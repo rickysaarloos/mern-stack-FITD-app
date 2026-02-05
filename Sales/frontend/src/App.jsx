@@ -1,20 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
 import Home from "./pages/Home";
-
-
-
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 function App() {
+  const [token, setToken] = useState(
+    localStorage.getItem("token")
+  );
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+
+        {/* HOME – publiek toegankelijk */}
+        <Route
+          path="/"
+          element={<Home token={token} setToken={setToken} />}
+        />
+
+        {/* LOGIN – alleen als je NIET bent ingelogd */}
+        <Route
+          path="/login"
+          element={
+            token ? <Navigate to="/" /> : <Login setToken={setToken} />
+          }
+        />
+
+        {/* REGISTER – alleen als je NIET bent ingelogd */}
+        <Route
+          path="/register"
+          element={
+            token ? <Navigate to="/" /> : <Register setToken={setToken} />
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );
