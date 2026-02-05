@@ -9,14 +9,19 @@ function CreateItem() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
+  const [brand, setBrand] = useState("");
+
+  const [images, setImages] = useState([]);
+  const [imageInput, setImageInput] = useState("");
+
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!title || !price) {
-      setError("Titel en prijs zijn verplicht");
+    if (!title || !price || !description) {
+      setError("Titel, prijs en beschrijving zijn verplicht");
       return;
     }
 
@@ -25,12 +30,14 @@ function CreateItem() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // 🔐 SUPER BELANGRIJK
+          Authorization: `Bearer ${token}`, // 🔐 JWT
         },
         body: JSON.stringify({
           title,
           price,
           description,
+          brand,
+          images,
         }),
       });
 
@@ -62,6 +69,8 @@ function CreateItem() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+
+          {/* Titel */}
           <input
             type="text"
             placeholder="Titel"
@@ -70,6 +79,7 @@ function CreateItem() {
             className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
           />
 
+          {/* Prijs */}
           <input
             type="number"
             placeholder="Prijs (€)"
@@ -78,6 +88,53 @@ function CreateItem() {
             className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
           />
 
+          {/* Merk */}
+          <select
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+            className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
+          >
+            <option value="">Selecteer merk</option>
+            <option value="Nike">Nike</option>
+            <option value="Adidas">Adidas</option>
+            <option value="Puma">Puma</option>
+            <option value="Zara">Zara</option>
+            <option value="H&M">H&M</option>
+            <option value="Overig">Overig</option>
+          </select>
+
+          {/* Image URL input */}
+          <input
+            type="text"
+            placeholder="Afbeelding URL (druk op Enter)"
+            value={imageInput}
+            onChange={(e) => setImageInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (!imageInput) return;
+                setImages([...images, imageInput]);
+                setImageInput("");
+              }
+            }}
+            className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
+          />
+
+          {/* Image previews */}
+          {images.length > 0 && (
+            <div className="flex gap-2 flex-wrap">
+              {images.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt="preview"
+                  className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Beschrijving */}
           <textarea
             placeholder="Beschrijving"
             value={description}
@@ -93,8 +150,11 @@ function CreateItem() {
           </button>
 
           {error && (
-            <p className="text-red-400 text-sm text-center">{error}</p>
+            <p className="text-red-400 text-sm text-center">
+              {error}
+            </p>
           )}
+
         </form>
       </div>
     </div>
