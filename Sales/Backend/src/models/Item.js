@@ -21,17 +21,9 @@ const itemSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
-    size: {
-      type: String,
-    },
-    brand: {
-      type: String,
-    },
-    images: [
-      {
-        type: String, // later: Cloudinary URLs
-      },
-    ],
+    size: String,
+    brand: String,
+    images: [String],
     status: {
       type: String,
       enum: ["te_koop", "verkocht"],

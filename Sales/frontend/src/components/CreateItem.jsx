@@ -1,32 +1,59 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 function CreateItem() {
+  const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (!title || !price) {
       setError("Titel en prijs zijn verplicht");
       return;
     }
 
-    console.log({ title, price, description });
+    try {
+      const response = await fetch("http://localhost:4000/api/items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🔐 SUPER BELANGRIJK
+        },
+        body: JSON.stringify({
+          title,
+          price,
+          description,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Item plaatsen mislukt");
+        return;
+      }
+
+      // ✅ succes → naar profiel
+      navigate("/profile");
+
+    } catch (err) {
+      setError("Server niet bereikbaar");
+    }
   };
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center text-gray-200">
       <div className="w-full max-w-lg bg-zinc-900 p-6 rounded-2xl shadow-xl">
 
-       
-        <Link
-          to="/"
-          className="text-sm text-purple-400 hover:underline"
-        >
+        <Link to="/" className="text-sm text-purple-400 hover:underline">
           ← Terug naar home
         </Link>
 
@@ -35,7 +62,6 @@ function CreateItem() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-6">
-
           <input
             type="text"
             placeholder="Titel"
@@ -67,9 +93,7 @@ function CreateItem() {
           </button>
 
           {error && (
-            <p className="text-red-400 text-sm text-center">
-              {error}
-            </p>
+            <p className="text-red-400 text-sm text-center">{error}</p>
           )}
         </form>
       </div>
