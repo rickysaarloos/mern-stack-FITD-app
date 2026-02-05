@@ -1,9 +1,9 @@
-function Home({ token, setToken }) {
+import { useContext } from "react";
+import { AuthContext } from "../context/authContext";
+import { Link } from "react-router-dom";
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-  };
+function Home() {
+  const { token, logout } = useContext(AuthContext);
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center text-gray-200">
@@ -24,19 +24,19 @@ function Home({ token, setToken }) {
             </p>
 
             <div className="mt-4 flex gap-3 justify-center">
-              <a
-                href="/login"
+              <Link
+                to="/login"
                 className="bg-purple-700 px-4 py-2 rounded-lg hover:bg-purple-600"
               >
                 Inloggen
-              </a>
+              </Link>
 
-              <a
-                href="/register"
+              <Link
+                to="/register"
                 className="border border-purple-500 px-4 py-2 rounded-lg hover:bg-purple-900"
               >
                 Registreren
-              </a>
+              </Link>
             </div>
           </>
         ) : (
@@ -45,9 +45,16 @@ function Home({ token, setToken }) {
               Je bent ingelogd ✅
             </p>
 
+            <Link
+              to="/items/new"
+              className="mt-4 block bg-green-600 hover:bg-green-500 py-2 rounded-lg"
+            >
+              ➕ Item plaatsen
+            </Link>
+
             <button
-              onClick={handleLogout}
-              className="mt-6 w-full bg-purple-700 hover:bg-purple-600 py-2 rounded-lg"
+              onClick={logout}
+              className="mt-4 w-full bg-purple-700 hover:bg-purple-600 py-2 rounded-lg"
             >
               Uitloggen
             </button>

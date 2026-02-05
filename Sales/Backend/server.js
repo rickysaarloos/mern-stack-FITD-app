@@ -1,30 +1,35 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import authRoutes from './src/routes/authRoutes.js';
-import dotenv from 'dotenv';
+import express from "express";
+import mongoose from "mongoose";
+import authRoutes from "./src/routes/authRoutes.js";
+import dotenv from "dotenv";
 import cors from "cors";
-
+import itemRoutes from "./src/routes/itemRoutes.js";
 
 dotenv.config();
 
-const app = express();
+const app = express();                
 const PORT = process.env.PORT || 4000;
 
-
-app.use(cors());   
+// middleware
+app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
+// routes
+app.use("/api/auth", authRoutes);
+app.use("/api/items", itemRoutes);    
 
-app.get('/', (req, res) => {
-  res.json({ message: 'FITD backend draait 🚀' });
+// test route
+app.get("/", (req, res) => {
+  res.json({ message: "FITD backend draait 🚀" });
 });
 
-mongoose.connect(process.env.MONGO_URI)
+// db + server
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => {
+    console.log("MongoDB connected");
     app.listen(PORT, () => {
       console.log(`Server draait op http://localhost:${PORT}`);
     });
-    console.log('MongoDB connected');
   })
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
