@@ -128,7 +128,7 @@ function Home() {
             <div className="relative">
               <div className="absolute inset-0 bg-[#7A1E16] opacity-20 rounded-3xl" />
               <img 
-                src="/src/assets/fashion.jpg"
+                src="..\public\images\Schermafbeelding 2026-02-06 040115.png"
                 alt="Fashion"
                 className="relative rounded-3xl object-cover h-[520px] w-full"
               />
