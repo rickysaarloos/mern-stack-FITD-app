@@ -104,3 +104,53 @@ export const getMyPurchases = async (req, res) => {
 
   res.json(purchases);
 };
+
+
+export const updateItem = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+
+    if (!item) {
+      return res.status(404).json({ message: "Item niet gevonden" });
+    }
+
+
+    if (item.seller.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Geen toegang" });
+    }
+
+    const { title, description, price, brand } = req.body;
+
+    item.title = title ?? item.title;
+    item.description = description ?? item.description;
+    item.price = price ?? item.price;
+    item.brand = brand ?? item.brand;
+
+    await item.save();
+
+    res.json(item);
+  } catch (err) {
+    res.status(400).json({ message: "Item bewerken mislukt" });
+  }
+};
+
+
+export const deleteItem = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+
+    if (!item) {
+      return res.status(404).json({ message: "Item niet gevonden" });
+    }
+
+   
+    if (item.seller.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Geen toegang" });
+    }
+
+    await item.deleteOne();
+    res.json({ message: "Item verwijderd" });
+  } catch {
+    res.status(400).json({ message: "Item verwijderen mislukt" });
+  }
+};
