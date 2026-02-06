@@ -6,13 +6,15 @@ import {
   getMyItems,
   updateItem,
   deleteItem,
+  buyItem,
+  getMySales,
 } from "../controllers/itemController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import upload from "../middleware/uploadMiddleware.js";
 
 const router = express.Router();
 
-// ➕ item aanmaken
+/* ➕ ITEM AANMAKEN */
 router.post(
   "/",
   protect,
@@ -20,19 +22,25 @@ router.post(
   createItem
 );
 
-// 📦 mijn items (MOET BOVEN :id)
+/* 📦 MIJN ITEMS */
 router.get("/mine", protect, getMyItems);
 
-// 🛍️ feed
+/* 💰 MIJN VERKOPEN (US-10) */
+router.get("/sales/mine", protect, getMySales);
+
+/* 🛍️ FEED */
 router.get("/", getAllItems);
 
-// 🔍 detailpagina
+/* 🛒 ITEM KOPEN */
+router.patch("/:id/buy", protect, buyItem);
+
+/* 🔍 DETAILPAGINA (MOET NA SPECIFIEKE ROUTES) */
 router.get("/:id", getItemById);
 
-// ✏️ item bewerken
+/* ✏️ ITEM BEWERKEN */
 router.patch("/:id", protect, updateItem);
 
-// 🗑️ item verwijderen
+/* 🗑️ ITEM VERWIJDEREN */
 router.delete("/:id", protect, deleteItem);
 
 export default router;

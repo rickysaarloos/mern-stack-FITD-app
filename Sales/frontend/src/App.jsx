@@ -7,6 +7,8 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import CreateItem from "./components/CreateItem";
 import Profile from "./pages/Profile";
+import Sales from "./pages/Sales";
+
 
 import ItemList from "./components/ItemList";
 import ItemDetail from "./pages/ItemDetail";
@@ -60,7 +62,14 @@ function App() {
               </PrivateRoute>
             }
           />
-
+<Route
+  path="/sales"
+  element={
+    <PrivateRoute>
+      <Sales />
+    </PrivateRoute>
+  }
+/>
           {/* 👤 PROFIEL */}
           <Route
             path="/profile"

@@ -142,10 +142,10 @@ function Profile() {
     <p className="text-gray-400">{user.email}</p>
   </div>
 
-  {/* LIST ITEM BUTTON */}
+  <div className="flex gap-4 mt-2">
+  {/* LIST ITEM */}
   <button
     onClick={() => navigate("/items/new")}
-
     className="
       bg-[#7A1E16]
       hover:bg-[#8B1D18]
@@ -156,11 +156,32 @@ function Profile() {
       text-sm
       uppercase
       tracking-widest
-      mt-2
     "
   >
     List item
   </button>
+
+  {/* MY SALES */}
+  <button
+    onClick={() => navigate("/sales")}
+    className="
+      border
+      border-gray-600
+      hover:border-white
+      transition
+      px-8
+      py-4
+      rounded-full
+      text-sm
+      uppercase
+      tracking-widest
+      text-gray-300
+    "
+  >
+    My sales
+  </button>
+</div>
+
 </div>
 
 
