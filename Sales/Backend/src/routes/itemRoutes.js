@@ -1,6 +1,8 @@
 import express from "express";
 import {
   createItem,
+  getAllItems,
+  getItemById,
   getMyItems,
   updateItem,
   deleteItem,
@@ -18,8 +20,14 @@ router.post(
   createItem
 );
 
-// 📦 mijn items
+// 📦 mijn items (MOET BOVEN :id)
 router.get("/mine", protect, getMyItems);
+
+// 🛍️ feed
+router.get("/", getAllItems);
+
+// 🔍 detailpagina
+router.get("/:id", getItemById);
 
 // ✏️ item bewerken
 router.patch("/:id", protect, updateItem);

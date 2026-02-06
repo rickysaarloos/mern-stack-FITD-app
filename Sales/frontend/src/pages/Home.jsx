@@ -1,74 +1,147 @@
 import { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 function Home() {
   const { token, logout } = useContext(AuthContext);
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center text-gray-200">
-      <div className="w-full max-w-md bg-zinc-900 p-6 rounded-2xl shadow-xl text-center">
+    <div className="min-h-screen bg-zinc-950 text-gray-100 flex flex-col">
 
-        <h1 className="text-2xl font-bold text-purple-400">
-          FITD 👕
+      {/* NAVBAR */}
+      <header className="flex justify-between items-center px-10 py-6">
+        <h1 className="font-serif text-xl tracking-wide">
+          FITD
         </h1>
 
-        <p className="text-gray-400 mt-2">
-          Koop & verkoop kleding
-        </p>
+        <nav className="flex gap-6 text-sm uppercase tracking-widest text-gray-400">
+          <Link to="/items" className="hover:text-white transition">
+            Feed
+          </Link>
 
-        {!token ? (
-          <>
-            <p className="mt-4 text-gray-400">
-              Log in om kleding te verkopen
-            </p>
-
-            <div className="mt-4 flex gap-3 justify-center">
-              <Link
-                to="/login"
-                className="bg-purple-700 px-4 py-2 rounded-lg hover:bg-purple-600"
-              >
-                Inloggen
-              </Link>
-
-              <Link
-                to="/register"
-                className="border border-purple-500 px-4 py-2 rounded-lg hover:bg-purple-900"
-              >
-                Registreren
-              </Link>
-            </div>
-          </>
-        ) : (
-          <>
-            <p className="mt-4 text-green-400">
-              Je bent ingelogd ✅
-            </p>
-
-            <Link
-              to="/items/new"
-              className="mt-4 block bg-green-600 hover:bg-green-500 py-2 rounded-lg"
-            >
-              ➕ Item plaatsen
+          {token && (
+            <Link to="/profile" className="hover:text-white transition">
+              Profile
             </Link>
+          )}
 
-            <Link
-              to="/profile"
-              className="mt-3 inline-block text-purple-400 hover:underline"
-            >
-              Naar mijn profiel
+          {!token ? (
+            <Link to="/login" className="hover:text-white transition">
+              Login
             </Link>
-
+          ) : (
             <button
               onClick={logout}
-              className="mt-4 w-full bg-purple-700 hover:bg-purple-600 py-2 rounded-lg"
+              className="hover:text-white transition"
             >
-              Uitloggen
+              Logout
             </button>
-          </>
-        )}
+          )}
+        </nav>
+      </header>
 
-      </div>
+      {/* HERO */}
+      <main className="flex-1 flex items-center">
+        <div className="max-w-6xl mx-auto px-10 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+
+          {/* TEXT */}
+          <div>
+            <p className="uppercase tracking-[0.3em] text-gray-500 text-sm mb-6">
+              Curated fashion marketplace
+            </p>
+
+            <h2 className="font-serif text-5xl md:text-7xl font-light leading-tight mb-8">
+              Buy & sell <br />
+              fashion with <br />
+              character
+            </h2>
+
+            <p className="text-gray-400 max-w-md mb-10 leading-relaxed">
+              Discover unique pieces from independent sellers.  
+              Timeless fashion, carefully selected.
+            </p>
+<div className="flex gap-6 flex-wrap">
+  <Link
+    to="/items"
+    className="
+      bg-[#7A1E16]
+      hover:bg-[#8B1D18]
+      transition
+      px-8
+      py-4
+      rounded-full
+      text-sm
+      uppercase
+      tracking-widest
+    "
+  >
+    Explore feed
+  </Link>
+
+  {token && (
+    <Link
+      to="/items/new"
+      className="
+        border
+        border-[#7A1E16]
+        text-[#7A1E16]
+        hover:bg-[#7A1E16]
+        hover:text-white
+        transition
+        px-8
+        py-4
+        rounded-full
+        text-sm
+        uppercase
+        tracking-widest
+      "
+    >
+      List item
+    </Link>
+  )}
+
+  {!token && (
+    <Link
+      to="/register"
+      className="
+        border
+        border-gray-600
+        hover:border-white
+        transition
+        px-8
+        py-4
+        rounded-full
+        text-sm
+        uppercase
+        tracking-widest
+      "
+    >
+      Join
+    </Link>
+  )}
+</div>
+
+          </div>
+
+          {/* VISUAL BLOCK */}
+          <div className="hidden md:block">
+            <div className="relative">
+              <div className="absolute inset-0 bg-[#7A1E16] opacity-20 rounded-3xl" />
+              <img
+                src=""
+                alt="Fashion"
+                className="relative rounded-3xl object-cover h-[520px] w-full"
+              />
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="px-10 py-6 text-xs text-gray-500 uppercase tracking-widest">
+        © {new Date().getFullYear()} FITD — Fashion in the details
+      </footer>
     </div>
   );
 }

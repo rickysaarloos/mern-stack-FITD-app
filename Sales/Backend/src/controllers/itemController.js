@@ -79,3 +79,24 @@ export const deleteItem = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// 📦 FEED – alle items
+export const getAllItems = async (req, res) => {
+  const items = await Item.find()
+    .populate("seller", "username")
+    .sort("-createdAt");
+
+  res.json(items);
+};
+
+// 🔍 DETAIL – één item
+export const getItemById = async (req, res) => {
+  const item = await Item.findById(req.params.id)
+    .populate("seller", "username email");
+
+  if (!item) {
+    return res.status(404).json({ message: "Item niet gevonden" });
+  }
+
+  res.json(item);
+};

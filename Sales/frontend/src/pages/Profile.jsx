@@ -1,15 +1,16 @@
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 function Profile() {
   const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // ✏️ edit state
   const [editingItemId, setEditingItemId] = useState(null);
   const [editForm, setEditForm] = useState({
     title: "",
@@ -19,24 +20,19 @@ function Profile() {
   });
 
   useEffect(() => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+    if (!token) return;
 
     const fetchData = async () => {
       try {
         const userRes = await fetch("http://localhost:4000/api/users/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        if (!userRes.ok) throw new Error("User ophalen mislukt");
+        if (!userRes.ok) throw new Error("Gebruiker ophalen mislukt");
         setUser(await userRes.json());
 
         const itemRes = await fetch("http://localhost:4000/api/items/mine", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (!itemRes.ok) throw new Error("Items ophalen mislukt");
         setItems(await itemRes.json());
       } catch (err) {
@@ -49,25 +45,19 @@ function Profile() {
     fetchData();
   }, [token]);
 
-  /* 🗑️ ITEM VERWIJDEREN */
   const handleDelete = async (id) => {
     if (!window.confirm("Item verwijderen?")) return;
 
-    try {
-      const res = await fetch(`http://localhost:4000/api/items/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    const res = await fetch(`http://localhost:4000/api/items/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-      if (!res.ok) throw new Error("Verwijderen mislukt");
-
+    if (res.ok) {
       setItems((prev) => prev.filter((item) => item._id !== id));
-    } catch (err) {
-      alert(err.message);
     }
   };
 
-  /* ✏️ START BEWERKEN */
   const startEdit = (item) => {
     setEditingItemId(item._id);
     setEditForm({
@@ -78,167 +68,203 @@ function Profile() {
     });
   };
 
-  /* ❌ ANNULEREN */
   const cancelEdit = () => {
     setEditingItemId(null);
-    setEditForm({
-      title: "",
-      description: "",
-      price: "",
-      brand: "",
-    });
+    setEditForm({ title: "", description: "", price: "", brand: "" });
   };
 
-  /* 💾 OPSLAAN */
   const saveEdit = async (id) => {
-    try {
-      const res = await fetch(`http://localhost:4000/api/items/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(editForm),
-      });
+    const res = await fetch(`http://localhost:4000/api/items/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(editForm),
+    });
 
-      if (!res.ok) throw new Error("Bewerken mislukt");
-
-      const updatedItem = await res.json();
-
+    if (res.ok) {
+      const updated = await res.json();
       setItems((prev) =>
-        prev.map((item) => (item._id === id ? updatedItem : item))
+        prev.map((item) => (item._id === id ? updated : item))
       );
-
       cancelEdit();
-    } catch (err) {
-      alert(err.message);
     }
   };
 
   if (!token) {
-    return <div className="text-center mt-20 text-gray-400">Log in</div>;
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-gray-400">
+        Log in om je profiel te bekijken
+      </div>
+    );
   }
 
   if (loading) {
-    return <div className="text-center mt-20 text-gray-400">Laden…</div>;
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-gray-400">
+        Profiel laden…
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center mt-20 text-red-400">{error}</div>;
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-red-400">
+        {error}
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-black text-gray-200 p-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl font-bold text-purple-400 mb-6">
-          Mijn items
-        </h1>
+    <div className="min-h-screen bg-zinc-950 text-gray-100 px-10 py-12">
+      <div className="max-w-7xl mx-auto">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {/* NAV */}
+        <button
+          onClick={() => navigate("/")}
+          className="text-sm uppercase tracking-widest text-gray-400 hover:text-white mb-10"
+        >
+          ← Home
+        </button>
+
+   {/* PROFILE HEADER */}
+<div className="mb-16 flex items-start justify-between">
+  <div>
+    <p className="uppercase tracking-[0.3em] text-gray-500 text-sm mb-4">
+      Profile
+    </p>
+
+    <h1 className="font-serif text-5xl font-light mb-6">
+      {user.username}
+    </h1>
+
+    <p className="text-gray-400">{user.email}</p>
+  </div>
+
+  {/* LIST ITEM BUTTON */}
+  <button
+    onClick={() => navigate("/items/new")}
+
+    className="
+      bg-[#7A1E16]
+      hover:bg-[#8B1D18]
+      transition
+      px-8
+      py-4
+      rounded-full
+      text-sm
+      uppercase
+      tracking-widest
+      mt-2
+    "
+  >
+    List item
+  </button>
+</div>
+
+
+        {/* ITEMS */}
+        <h2 className="font-serif text-3xl font-light mb-10">
+          My listings
+        </h2>
+
+        {items.length === 0 && (
+          <p className="text-gray-500">Nog geen items geplaatst.</p>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
           {items.map((item) => (
-            <div
-              key={item._id}
-              className="bg-zinc-900 rounded-xl overflow-hidden shadow"
-            >
+            <div key={item._id} className="group">
               {item.images?.length > 0 && (
                 <img
                   src={`http://localhost:4000${item.images[0]}`}
                   alt={item.title}
-                  className="h-48 w-full object-cover"
+                  className="h-80 w-full object-cover rounded-3xl mb-4"
                 />
               )}
 
-              <div className="p-4">
-                {editingItemId === item._id ? (
-                  <>
-                    <input
-                      className="w-full mb-2 bg-zinc-800 p-2 rounded"
-                      value={editForm.title}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, title: e.target.value })
-                      }
-                    />
+              {editingItemId === item._id ? (
+                <div className="space-y-3">
+                  <input
+                    className="w-full bg-zinc-900 p-3 rounded-xl"
+                    value={editForm.title}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, title: e.target.value })
+                    }
+                  />
 
-                    <textarea
-                      className="w-full mb-2 bg-zinc-800 p-2 rounded"
-                      value={editForm.description}
-                      onChange={(e) =>
-                        setEditForm({
-                          ...editForm,
-                          description: e.target.value,
-                        })
-                      }
-                    />
+                  <textarea
+                    className="w-full bg-zinc-900 p-3 rounded-xl"
+                    value={editForm.description}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, description: e.target.value })
+                    }
+                  />
 
-                    <input
-                      type="number"
-                      className="w-full mb-2 bg-zinc-800 p-2 rounded"
-                      value={editForm.price}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, price: e.target.value })
-                      }
-                    />
+                  <input
+                    type="number"
+                    className="w-full bg-zinc-900 p-3 rounded-xl"
+                    value={editForm.price}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, price: e.target.value })
+                    }
+                  />
 
-                    <input
-                      className="w-full mb-3 bg-zinc-800 p-2 rounded"
-                      placeholder="Merk"
-                      value={editForm.brand}
-                      onChange={(e) =>
-                        setEditForm({ ...editForm, brand: e.target.value })
-                      }
-                    />
+                  <input
+                    className="w-full bg-zinc-900 p-3 rounded-xl"
+                    placeholder="Brand"
+                    value={editForm.brand}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, brand: e.target.value })
+                    }
+                  />
 
-                    <div className="flex justify-between">
+                  <div className="flex justify-between text-sm uppercase tracking-widest">
+                    <button
+                      onClick={() => saveEdit(item._id)}
+                      className="text-green-400"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="text-gray-400"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h3 className="font-serif text-xl mb-1">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-gray-400 text-sm line-clamp-2">
+                    {item.description}
+                  </p>
+
+                  <div className="flex justify-between items-center mt-4 text-sm uppercase tracking-widest">
+                    <span className="text-[#7A1E16]">€ {item.price}</span>
+
+                    <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition">
                       <button
-                        onClick={() => saveEdit(item._id)}
-                        className="text-green-400 text-sm"
+                        onClick={() => startEdit(item)}
+                        className="text-gray-400 hover:text-white"
                       >
-                        Opslaan
+                        Edit
                       </button>
                       <button
-                        onClick={cancelEdit}
-                        className="text-gray-400 text-sm"
+                        onClick={() => handleDelete(item._id)}
+                        className="text-red-500"
                       >
-                        Annuleren
+                        Delete
                       </button>
                     </div>
-                  </>
-                ) : (
-                  <>
-                    <h3 className="text-lg font-semibold">{item.title}</h3>
-                    <p className="text-gray-400 text-sm mt-1">
-                      {item.description}
-                    </p>
-
-                    <div className="flex justify-between items-center mt-4">
-                      <span className="text-purple-400 font-bold">
-                        € {item.price}
-                      </span>
-
-                      <div className="flex gap-3 text-sm">
-                        <button
-                          onClick={() => startEdit(item)}
-                          className="text-blue-400"
-                        >
-                          Bewerken
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          className="text-red-400"
-                        >
-                          Verwijderen
-                        </button>
-                      </div>
-                    </div>
-
-                    {item.brand && (
-                      <p className="text-xs text-gray-500 mt-2">
-                        Merk: {item.brand}
-                      </p>
-                    )}
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>

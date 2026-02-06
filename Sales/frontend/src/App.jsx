@@ -8,10 +8,12 @@ import Register from "./components/Register";
 import CreateItem from "./components/CreateItem";
 import Profile from "./pages/Profile";
 
+import ItemList from "./components/ItemList";
+import ItemDetail from "./pages/ItemDetail";
+
 import { CartProvider } from "./context/CartContext";
 import FloatingCart from "./components/FloatingCart";
 import CartPage from "./components/CartPage";
-import ItemList from "./components/ItemList"; // Vervangt ProductList
 
 // 🔐 Private route wrapper
 function PrivateRoute({ children }) {
@@ -25,22 +27,31 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-        {/* Drijvende winkelwagen */}
+        {/* 🛒 Drijvende winkelwagen */}
         <FloatingCart />
 
         <Routes>
-          {/* HOME */}
+          {/* 🏠 HOME */}
           <Route path="/" element={<Home />} />
 
-          {/* ITEMS + CART */}
+          {/* 🛍️ FEED + DETAIL */}
           <Route path="/items" element={<ItemList />} />
+          <Route path="/items/:id" element={<ItemDetail />} />
+
+          {/* 🛒 CART */}
           <Route path="/cart" element={<CartPage />} />
 
-          {/* AUTH */}
-          <Route path="/login" element={token ? <Navigate to="/" /> : <Login />} />
-          <Route path="/register" element={token ? <Navigate to="/" /> : <Register />} />
+          {/* 🔐 AUTH */}
+          <Route
+            path="/login"
+            element={token ? <Navigate to="/" /> : <Login />}
+          />
+          <Route
+            path="/register"
+            element={token ? <Navigate to="/" /> : <Register />}
+          />
 
-          {/* 🔐 ITEM CREËREN */}
+          {/* ➕ ITEM AANMAKEN */}
           <Route
             path="/items/new"
             element={
@@ -50,7 +61,7 @@ function App() {
             }
           />
 
-          {/* 🔐 PROFIEL */}
+          {/* 👤 PROFIEL */}
           <Route
             path="/profile"
             element={
