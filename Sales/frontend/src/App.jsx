@@ -8,6 +8,8 @@ import Register from "./components/Register";
 import CreateItem from "./components/CreateItem";
 import Profile from "./pages/Profile";
 import Sales from "./pages/Sales";
+import Purchases from "./pages/Purchases";
+
 
 
 import ItemList from "./components/ItemList";
@@ -70,6 +72,9 @@ function App() {
     </PrivateRoute>
   }
 />
+
+<Route path="/purchases" element={<Purchases />} />
+
           {/* 👤 PROFIEL */}
           <Route
             path="/profile"

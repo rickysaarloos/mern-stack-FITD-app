@@ -8,6 +8,7 @@ import {
   deleteItem,
   buyItem,
   getMySales,
+  getMyPurchases
 } from "../controllers/itemController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import upload from "../middleware/uploadMiddleware.js";
@@ -27,6 +28,10 @@ router.get("/mine", protect, getMyItems);
 
 /* 💰 MIJN VERKOPEN (US-10) */
 router.get("/sales/mine", protect, getMySales);
+
+// 🛒 mijn aankopen
+router.get("/purchases/mine", protect, getMyPurchases);
+
 
 /* 🛍️ FEED */
 router.get("/", getAllItems);

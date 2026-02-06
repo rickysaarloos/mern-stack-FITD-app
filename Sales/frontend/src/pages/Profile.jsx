@@ -180,6 +180,14 @@ function Profile() {
   >
     My sales
   </button>
+
+  <button
+  onClick={() => navigate("/purchases")}
+  className="text-sm uppercase tracking-widest text-gray-400 hover:text-white"
+>
+  My purchases
+</button>
+
 </div>
 
 </div>

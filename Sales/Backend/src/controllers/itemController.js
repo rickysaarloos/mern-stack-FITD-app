@@ -87,7 +87,9 @@ export const updateItem = async (req, res) => {
     }
 
     if (item.status === "verkocht") {
-      return res.status(400).json({ message: "Verkocht item kan niet aangepast worden" });
+      return res
+        .status(400)
+        .json({ message: "Verkocht item kan niet aangepast worden" });
     }
 
     item.title = req.body.title ?? item.title;
@@ -140,7 +142,9 @@ export const buyItem = async (req, res) => {
     }
 
     if (item.seller.toString() === req.user.id) {
-      return res.status(400).json({ message: "Je kan je eigen item niet kopen" });
+      return res
+        .status(400)
+        .json({ message: "Je kan je eigen item niet kopen" });
     }
 
     item.status = "verkocht";
@@ -168,5 +172,23 @@ export const getMySales = async (req, res) => {
     res.json(sales);
   } catch (error) {
     res.status(500).json({ message: "Verkopen ophalen mislukt" });
+  }
+};
+
+/* =========================
+   🛒 MIJN AANKOPEN (US-09)
+========================= */
+export const getMyPurchases = async (req, res) => {
+  try {
+    const purchases = await Item.find({
+      buyer: req.user.id,
+      status: "verkocht",
+    })
+      .populate("seller", "username email")
+      .sort({ updatedAt: -1 });
+
+    res.json(purchases);
+  } catch (error) {
+    res.status(500).json({ message: "Aankopen ophalen mislukt" });
   }
 };
