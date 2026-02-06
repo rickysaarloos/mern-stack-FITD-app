@@ -8,13 +8,40 @@ function ItemDetail() {
   const { token } = useContext(AuthContext);
 
   const [item, setItem] = useState(null);
+  const [sellerReviews, setSellerReviews] = useState({
+    reviews: [],
+    averageRating: 0,
+    totalReviews: 0,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/api/items/${id}`)
-      .then((res) => res.json())
-      .then(setItem)
-      .finally(() => setLoading(false));
+    const fetchItemAndReviews = async () => {
+      try {
+        const itemRes = await fetch(`http://localhost:4000/api/items/${id}`);
+        if (!itemRes.ok) throw new Error("Item niet gevonden");
+
+        const itemData = await itemRes.json();
+        setItem(itemData);
+
+        if (itemData?.seller?._id) {
+          const reviewRes = await fetch(
+            `http://localhost:4000/api/reviews/user/${itemData.seller._id}`
+          );
+
+          if (reviewRes.ok) {
+            const reviewData = await reviewRes.json();
+            setSellerReviews(reviewData);
+          }
+        }
+      } catch (err) {
+        setItem(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItemAndReviews();
   }, [id]);
 
   if (loading) {
@@ -61,7 +88,6 @@ function ItemDetail() {
 
           {/* INFO */}
           <div className="flex flex-col">
-
             <p className="uppercase tracking-[0.3em] text-gray-500 text-sm mb-4">
               Listing
             </p>
@@ -78,11 +104,16 @@ function ItemDetail() {
               {item.description}
             </p>
 
-            <p className="text-sm uppercase tracking-widest text-gray-500 mb-12">
+            <p className="text-sm uppercase tracking-widest text-gray-500 mb-2">
               Seller —{" "}
               <span className="text-gray-300">
                 {item.seller?.username}
               </span>
+            </p>
+
+            <p className="text-sm text-gray-400 mb-8">
+              Rating: {sellerReviews.averageRating} / 5 (
+              {sellerReviews.totalReviews} reviews)
             </p>
 
             {token ? (
@@ -107,6 +138,42 @@ function ItemDetail() {
                 Log in om te kopen
               </p>
             )}
+
+            {/* REVIEWS */}
+            <div className="mt-12 border-t border-zinc-800 pt-6">
+              <h2 className="font-serif text-2xl font-light mb-4">
+                Reviews over deze verkoper
+              </h2>
+
+              {sellerReviews.reviews.length === 0 ? (
+                <p className="text-gray-500">Nog geen reviews.</p>
+              ) : (
+                <div className="space-y-4">
+                  {sellerReviews.reviews.slice(0, 5).map((review) => (
+                    <div
+                      key={review._id}
+                      className="bg-zinc-900 rounded-xl p-4"
+                    >
+                      <div className="flex justify-between text-sm mb-2">
+                        <span className="text-gray-300">
+                          {review.reviewer?.username}
+                        </span>
+                        <span className="text-[#7A1E16]">
+                          {review.rating} / 5
+                        </span>
+                      </div>
+
+                      {review.comment && (
+                        <p className="text-gray-400 text-sm">
+                          {review.comment}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { fileURLToPath } from "url";
 import authRoutes from "./src/routes/authRoutes.js";
 import itemRoutes from "./src/routes/itemRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js"; // ✅ DIT ONTBRAK
+import reviewRoutes from "./src/routes/reviewRoutes.js";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/users", userRoutes); // ✅ BELANGRIJK
+app.use("/api/reviews", reviewRoutes);
 
 // test route
 app.get("/", (req, res) => {
