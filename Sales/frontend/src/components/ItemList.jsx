@@ -1,14 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ItemCard from "./ItemCard";
+import { AuthContext } from "../context/AuthContext";
 
 const ItemList = () => {
+  const { token } = useContext(AuthContext);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/items");
+        const res = await fetch("http://localhost:4000/api/items", {
+          headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
+        });
 
         if (!res.ok) {
           throw new Error("Server error");
@@ -19,12 +25,12 @@ const ItemList = () => {
       } catch (error) {
         console.error("Fout bij ophalen items:", error);
       } finally {
-        setLoading(false); // 🔥 DIT ONTBRAK
+        setLoading(false);
       }
     };
 
     fetchItems();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return (

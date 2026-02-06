@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 function Register() {
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -32,56 +34,79 @@ function Register() {
         return;
       }
 
-      login(data.token); // ✅ centraal via context
+      login(data.token);
     } catch {
       setError("Server error");
     }
   };
 
   return (
-    <form
-      onSubmit={handleRegister}
-      className="bg-zinc-900 p-6 rounded-xl space-y-4"
-    >
-      <h2 className="text-2xl font-bold text-center text-orange-400">
-        Registreren
-      </h2>
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
+      <form
+        onSubmit={handleRegister}
+        className="w-full max-w-md bg-zinc-900 rounded-2xl p-8 space-y-6 shadow-lg"
+      >
+        {/* TERUG */}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="text-sm uppercase tracking-widest text-gray-400 hover:text-white"
+        >
+          ← Terug
+        </button>
 
-      <input
-        type="text"
-        placeholder="Gebruikersnaam"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
-        required
-      />
+        <h2 className="font-serif text-3xl text-center text-gray-100">
+          Registreren
+        </h2>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
-        required
-      />
+        <input
+          type="text"
+          placeholder="Gebruikersnaam"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#7A1E16]"
+        />
 
-      <input
-        type="password"
-        placeholder="Wachtwoord (min. 6 tekens)"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
-        required
-      />
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#7A1E16]"
+        />
 
-      <button className="w-full bg-orange-600 hover:bg-orange-500 text-white font-semibold py-2 rounded">
-        Registreren
-      </button>
+        <input
+          type="password"
+          placeholder="Wachtwoord (min. 6 tekens)"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#7A1E16]"
+        />
 
-      {error && (
-        <p className="text-red-400 text-sm text-center">{error}</p>
-      )}
-    </form>
+        <button className="w-full bg-[#7A1E16] hover:bg-[#8B1D18] transition text-white uppercase tracking-widest py-3 rounded-full">
+          Registreren
+        </button>
+
+        <p className="text-center text-sm text-gray-400">
+          Heb je al een account?{" "}
+          <Link
+            to="/login"
+            className="text-[#7A1E16] hover:underline"
+          >
+            Inloggen
+          </Link>
+        </p>
+
+        {error && (
+          <p className="text-red-400 text-sm text-center">
+            {error}
+          </p>
+        )}
+      </form>
+    </div>
   );
 }
 

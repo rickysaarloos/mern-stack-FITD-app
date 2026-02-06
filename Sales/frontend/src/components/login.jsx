@@ -28,62 +28,63 @@ function Login() {
       }
 
       login(data.token);
-    } catch (err) {
+    } catch {
       setError("Server niet bereikbaar");
     }
   };
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="bg-zinc-900 p-6 rounded-xl space-y-4 max-w-md mx-auto"
-    >
-      <h2 className="text-2xl font-bold text-center text-purple-400">
-        Inloggen
-      </h2>
-
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
-      />
-
-      <input
-        type="password"
-        placeholder="Wachtwoord"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-white"
-      />
-
-      <button
-        type="submit"
-        className="w-full bg-purple-700 hover:bg-purple-600 text-white font-semibold py-2 rounded"
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
+      <form
+        onSubmit={handleLogin}
+        className="w-full max-w-md bg-zinc-900 rounded-2xl p-8 space-y-6 shadow-lg"
       >
-        Inloggen
-      </button>
+        <h2 className="font-serif text-3xl text-center text-gray-100">
+          Login
+        </h2>
 
-      {/* 👉 link naar registreren */}
-      <p className="text-center text-sm text-gray-400">
-        Nog geen account?{" "}
-        <Link
-          to="/register"
-          className="text-purple-400 hover:underline"
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#7A1E16]"
+        />
+
+        <input
+          type="password"
+          placeholder="Wachtwoord"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#7A1E16]"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-[#7A1E16] hover:bg-[#8B1D18] transition text-white uppercase tracking-widest py-3 rounded-full"
         >
-          Registreren
-        </Link>
-      </p>
+          Inloggen
+        </button>
 
-      {error && (
-        <p className="text-red-400 text-sm text-center">
-          {error}
+        <p className="text-center text-sm text-gray-400">
+          Nog geen account?{" "}
+          <Link
+            to="/register"
+            className="text-[#7A1E16] hover:underline"
+          >
+            Registreren
+          </Link>
         </p>
-      )}
-    </form>
+
+        {error && (
+          <p className="text-red-400 text-sm text-center">
+            {error}
+          </p>
+        )}
+      </form>
+    </div>
   );
 }
 

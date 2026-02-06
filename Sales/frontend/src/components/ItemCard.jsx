@@ -1,18 +1,28 @@
+import { useContext } from "react";
 import { useCart } from "../context/CartContext";
 import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
 
 const ItemCard = ({ item }) => {
   const { addToCart, cartItems } = useCart();
+   const { user } = useContext(AuthContext);
 
   const alreadyInCart = cartItems.some(
     (cartItem) => cartItem.id === item._id
   );
 
+  const isOwnItem = user && item.seller?._id === user._id;
+
   const handleAddToCart = () => {
+        if (isOwnItem) {
+      toast.info("Je kan je eigen listing niet in je cart zetten");
+      return;
+    }
+
     if (alreadyInCart) {
       toast.info("Dit item zit al in je cart");
       return;
-    }
+    } 
 
     addToCart({
       id: item._id,
@@ -63,7 +73,7 @@ const ItemCard = ({ item }) => {
         {/* BUTTON */}
         <button
           onClick={handleAddToCart}
-          disabled={item.status === "verkocht" || alreadyInCart}
+                 disabled={item.status === "verkocht" || alreadyInCart || isOwnItem}
           className={`
             mt-4
             w-full
@@ -74,8 +84,8 @@ const ItemCard = ({ item }) => {
             uppercase
             tracking-widest
             transition
-            ${
-              item.status === "verkocht" || alreadyInCart
+            ${ 
+              item.status === "verkocht" || alreadyInCart || isOwnItem
                 ? "border border-gray-700 text-gray-500 cursor-not-allowed"
                 : "border border-[#7A1E16] text-[#7A1E16] hover:bg-[#7A1E16] hover:text-white"
             }
@@ -83,6 +93,8 @@ const ItemCard = ({ item }) => {
         >
           {item.status === "verkocht"
             ? "Niet beschikbaar"
+            : isOwnItem
+            ? "Eigen listing"
             : alreadyInCart
             ? "Al in cart"
             : "Add to cart"}

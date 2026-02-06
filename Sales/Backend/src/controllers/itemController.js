@@ -53,7 +53,10 @@ export const getItemById = async (req, res) => {
 
 /* 📦 MIJN ITEMS */
 export const getMyItems = async (req, res) => {
-  const items = await Item.find({ seller: req.user.id });
+   const items = await Item.find({
+    seller: req.user.id,
+    status: "te koop",
+  }).sort({ createdAt: -1 });
   res.json(items);
 };
 
