@@ -9,6 +9,7 @@ import authRoutes from "./src/routes/authRoutes.js";
 import itemRoutes from "./src/routes/itemRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js"; // ✅ DIT ONTBRAK
 import reviewRoutes from "./src/routes/reviewRoutes.js";
+import notificationRoutes from "./src/routes/notificationRoutes.js";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/users", userRoutes); // ✅ BELANGRIJK
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // test route
 app.get("/", (req, res) => {

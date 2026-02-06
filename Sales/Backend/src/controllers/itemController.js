@@ -1,6 +1,7 @@
 import Item from "../models/Item.js";
+import Notification from "../models/Notification.js";
 
-/* ➕ ITEM AANMAKEN */
+// item maken
 export const createItem = async (req, res) => {
   try {
     const images = req.files
@@ -22,7 +23,7 @@ export const createItem = async (req, res) => {
   }
 };
 
-/* 🛍️ FEED */
+// feed
 export const getAllItems = async (req, res) => {
   try {
     const filter = { status: "te koop" };
@@ -41,7 +42,7 @@ export const getAllItems = async (req, res) => {
   }
 };
 
-/* 🔍 DETAIL */
+
 export const getItemById = async (req, res) => {
   const item = await Item.findById(req.params.id)
     .populate("seller", "username email");
@@ -51,7 +52,7 @@ export const getItemById = async (req, res) => {
   res.json(item);
 };
 
-/* 📦 MIJN ITEMS */
+
 export const getMyItems = async (req, res) => {
    const items = await Item.find({
     seller: req.user.id,
@@ -60,7 +61,7 @@ export const getMyItems = async (req, res) => {
   res.json(items);
 };
 
-/* 💳 KOPEN */
+
 export const buyItem = async (req, res) => {
   const item = await Item.findById(req.params.id);
 
@@ -73,11 +74,18 @@ export const buyItem = async (req, res) => {
   item.status = "verkocht";
   item.buyer = req.user.id;
   await item.save();
+    await Notification.create({
+    user: item.seller,
+    item: item._id,
+    buyer: req.user.id,
+    message: `Je item \"${item.title}\" is verkocht.`,
+  });
+
 
   res.json(item);
 };
 
-/* 📊 MIJN VERKOPEN */
+
 export const getMySales = async (req, res) => {
   const sales = await Item.find({
     seller: req.user.id,
@@ -87,7 +95,7 @@ export const getMySales = async (req, res) => {
   res.json(sales);
 };
 
-/* 🧾 MIJN AANKOPEN */
+
 export const getMyPurchases = async (req, res) => {
   const purchases = await Item.find({
     buyer: req.user.id,

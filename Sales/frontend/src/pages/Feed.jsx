@@ -6,7 +6,7 @@ function Feed() {
     <div className="min-h-screen bg-zinc-950 text-gray-100 px-10 py-12">
       <div className="max-w-7xl mx-auto">
 
-        {/* NAV */}
+        
         <div className="flex justify-between items-center mb-16">
           <div>
             <p className="uppercase tracking-[0.3em] text-gray-500 text-sm mb-4">
@@ -34,7 +34,7 @@ function Feed() {
           </div>
         </div>
 
-        {/* ITEMS */}
+        
         <ItemList />
 
       </div>

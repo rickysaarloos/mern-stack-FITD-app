@@ -180,6 +180,24 @@ function Profile() {
   >
     My sales
   </button>
+     <button
+    onClick={() => navigate("/notifications")}
+    className="
+      border
+      border-gray-600
+      hover:border-white
+      transition
+      px-8
+      py-4
+      rounded-full
+      text-sm
+      uppercase
+      tracking-widest
+      text-gray-300
+    "
+  >
+    Notifications
+  </button>
 
   <button
   onClick={() => navigate("/purchases")}

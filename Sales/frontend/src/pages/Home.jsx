@@ -8,7 +8,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-zinc-950 text-gray-100 flex flex-col">
 
-      {/* NAVBAR */}
+      
       <header className="flex justify-between items-center px-10 py-6">
         <h1 className="font-serif text-xl tracking-wide">
           FITD
@@ -40,11 +40,11 @@ function Home() {
         </nav>
       </header>
 
-      {/* HERO */}
+     
       <main className="flex-1 flex items-center">
         <div className="max-w-6xl mx-auto px-10 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
 
-          {/* TEXT */}
+        
           <div>
             <p className="uppercase tracking-[0.3em] text-gray-500 text-sm mb-6">
               Curated fashion marketplace
@@ -123,7 +123,7 @@ function Home() {
 
           </div>
 
-          {/* VISUAL BLOCK */}
+         
           <div className="hidden md:block">
             <div className="relative">
               <div className="absolute inset-0 bg-[#7A1E16] opacity-20 rounded-3xl" />
@@ -138,7 +138,7 @@ function Home() {
         </div>
       </main>
 
-      {/* FOOTER */}
+      
       <footer className="px-10 py-6 text-xs text-gray-500 uppercase tracking-widest">
         © {new Date().getFullYear()} FITD — Fashion in the details
       </footer>

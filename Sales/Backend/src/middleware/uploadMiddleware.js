@@ -4,7 +4,7 @@ import fs from "fs";
 
 const uploadDir = "uploads";
 
-// 📁 Map aanmaken als die niet bestaat
+// maak uploads map
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
@@ -32,7 +32,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
 });
 
 export default upload;

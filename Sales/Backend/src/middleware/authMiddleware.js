@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-/* VERPLICHT INGLOGD */
+// verplicht inlog
 export const protect = async (req, res, next) => {
   let token;
 
@@ -23,7 +23,7 @@ export const protect = async (req, res, next) => {
   }
 };
 
-/* OPTIONEEL INGLOGD (voor feed) */
+// inlog feed
 export const optionalProtect = async (req, res, next) => {
   let token;
 

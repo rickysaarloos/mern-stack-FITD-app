@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import Notifications from "./pages/Notifications";
 
 import Home from "./pages/Home";
 import Login from "./components/Login";
@@ -18,7 +19,7 @@ import { CartProvider } from "./context/CartContext";
 import FloatingCart from "./components/FloatingCart";
 import CartPage from "./components/CartPage";
 
-// 🔐 Private route wrapper
+
 function PrivateRoute({ children }) {
   const { token } = useContext(AuthContext);
   return token ? children : <Navigate to="/login" />;
@@ -30,22 +31,21 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-        {/* 🛒 Floating cart */}
+      
         <FloatingCart />
 
         <Routes>
-          {/* 🏠 HOME */}
+        
           <Route path="/" element={<Home />} />
 
-          {/* 🛍️ FEED */}
           <Route path="/items" element={<Feed />} />
 
           <Route path="/items/:id" element={<ItemDetail />} />
 
-          {/* 🛒 CART */}
+       
           <Route path="/cart" element={<CartPage />} />
 
-          {/* 🔐 AUTH */}
+         
           <Route
             path="/login"
             element={token ? <Navigate to="/" /> : <Login />}
@@ -55,7 +55,7 @@ function App() {
             element={token ? <Navigate to="/" /> : <Register />}
           />
 
-          {/* ➕ ITEM AANMAKEN */}
+       
           <Route
             path="/items/new"
             element={
@@ -65,7 +65,7 @@ function App() {
             }
           />
 
-          {/* 👤 PROFIEL */}
+       
           <Route
             path="/profile"
             element={
@@ -75,7 +75,7 @@ function App() {
             }
           />
 
-          {/* 📊 VERKOPEN */}
+       
           <Route
             path="/sales"
             element={
@@ -85,12 +85,22 @@ function App() {
             }
           />
 
-          {/* 🧾 AANKOPEN */}
+          
           <Route
             path="/purchases"
             element={
               <PrivateRoute>
                 <Purchases />
+              </PrivateRoute>
+            }
+          />
+
+                 
+          <Route
+            path="/notifications"
+            element={
+              <PrivateRoute>
+                <Notifications />
               </PrivateRoute>
             }
           />
