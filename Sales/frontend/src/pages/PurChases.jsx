@@ -8,23 +8,31 @@ function Purchases() {
 
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!token) return;
-
     const fetchPurchases = async () => {
-      const res = await fetch(
-        "http://localhost:4000/api/items/purchases/mine",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      try {
+        const res = await fetch(
+          "http://localhost:4000/api/items/purchases/mine",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      const data = await res.json();
-      setPurchases(data);
-      setLoading(false);
+        if (!res.ok) {
+          throw new Error("Aankopen ophalen mislukt");
+        }
+
+        const data = await res.json();
+        setPurchases(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchPurchases();
@@ -34,6 +42,14 @@ function Purchases() {
     return (
       <div className="min-h-screen bg-zinc-950 text-gray-400 flex items-center justify-center">
         Aankopen laden…
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-red-400">
+        {error}
       </div>
     );
   }
@@ -60,7 +76,7 @@ function Purchases() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
           {purchases.map((item) => (
             <div key={item._id}>
-              {item.images?.length > 0 && (
+              {item.images?.[0] && (
                 <img
                   src={`http://localhost:4000${item.images[0]}`}
                   alt={item.title}
@@ -79,7 +95,7 @@ function Purchases() {
               <div className="mt-4 text-sm uppercase tracking-widest flex justify-between">
                 <span className="text-[#7A1E16]">€ {item.price}</span>
                 <span className="text-gray-500">
-                  Seller: {item.seller?.username}
+                  Seller: {item.seller?.username ?? "Onbekend"}
                 </span>
               </div>
             </div>

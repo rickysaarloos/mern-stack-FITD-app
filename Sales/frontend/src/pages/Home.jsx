@@ -127,8 +127,8 @@ function Home() {
           <div className="hidden md:block">
             <div className="relative">
               <div className="absolute inset-0 bg-[#7A1E16] opacity-20 rounded-3xl" />
-              <img
-                src=""
+              <img 
+                src="/src/assets/fashion.jpg"
                 alt="Fashion"
                 className="relative rounded-3xl object-cover h-[520px] w-full"
               />

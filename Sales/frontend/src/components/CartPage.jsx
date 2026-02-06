@@ -1,44 +1,58 @@
 import { useCart } from "../context/CartContext";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const { cartItems, removeFromCart, clearCart } = useCart();
+  const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const total = cartItems.reduce((acc, item) => acc + item.price, 0);
+  const total = cartItems.reduce((acc, i) => acc + i.price, 0);
 
-  const handleCheckout = () => {
-    toast.success("Checkout succesvol! Dank voor je aankoop.");
-    clearCart();
+  const handleCheckout = async () => {
+    try {
+      for (const item of cartItems) {
+        await fetch(`http://localhost:4000/api/items/${item.id}/buy`, {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+
+      toast.success("Aankoop succesvol 🎉");
+      clearCart();
+      navigate("/purchases");
+    } catch {
+      toast.error("Aankoop mislukt");
+    }
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-24 p-6 bg-zinc-900 rounded-xl shadow-lg text-white">
-      <h2 className="text-2xl font-bold mb-6">Winkelwagen</h2>
-
-      {cartItems.length === 0 && <p className="text-gray-400">Je cart is leeg.</p>}
+    <div className="max-w-3xl mx-auto mt-24 p-6 bg-zinc-900 rounded-2xl text-white">
+      <h2 className="font-serif text-3xl mb-6">Shopping cart</h2>
 
       {cartItems.map((item) => (
-        <div key={item.id} className="flex justify-between items-center py-3 border-b border-gray-700">
+        <div key={item.id} className="flex justify-between border-b py-3">
           <span>{item.title}</span>
-          <span>{item.price.toFixed(2)} €</span>
+          <span>€{item.price}</span>
           <button
-            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition"
-            onClick={() => {
-              removeFromCart(item.id);
-              toast.info(`${item.title} verwijderd uit cart`);
-            }}
+            onClick={() => removeFromCart(item.id)}
+            className="text-red-400 hover:text-red-300"
           >
-            Verwijderen
+            Remove
           </button>
         </div>
       ))}
 
       {cartItems.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-xl font-semibold mb-4">Totaal: {total.toFixed(2)} €</h3>
+          <p className="mb-4">Total: €{total}</p>
           <button
-            className="bg-green-600 px-6 py-2 rounded hover:bg-green-700 transition"
             onClick={handleCheckout}
+            className="bg-[#7A1E16] px-6 py-3 rounded-full uppercase"
           >
             Checkout
           </button>

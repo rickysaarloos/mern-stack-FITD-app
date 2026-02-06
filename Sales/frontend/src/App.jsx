@@ -10,9 +10,8 @@ import Profile from "./pages/Profile";
 import Sales from "./pages/Sales";
 import Purchases from "./pages/Purchases";
 
+import Feed from "./pages/Feed";
 
-
-import ItemList from "./components/ItemList";
 import ItemDetail from "./pages/ItemDetail";
 
 import { CartProvider } from "./context/CartContext";
@@ -31,15 +30,16 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
-        {/* 🛒 Drijvende winkelwagen */}
+        {/* 🛒 Floating cart */}
         <FloatingCart />
 
         <Routes>
           {/* 🏠 HOME */}
           <Route path="/" element={<Home />} />
 
-          {/* 🛍️ FEED + DETAIL */}
-          <Route path="/items" element={<ItemList />} />
+          {/* 🛍️ FEED */}
+          <Route path="/items" element={<Feed />} />
+
           <Route path="/items/:id" element={<ItemDetail />} />
 
           {/* 🛒 CART */}
@@ -64,16 +64,6 @@ function App() {
               </PrivateRoute>
             }
           />
-<Route
-  path="/sales"
-  element={
-    <PrivateRoute>
-      <Sales />
-    </PrivateRoute>
-  }
-/>
-
-<Route path="/purchases" element={<Purchases />} />
 
           {/* 👤 PROFIEL */}
           <Route
@@ -81,6 +71,26 @@ function App() {
             element={
               <PrivateRoute>
                 <Profile />
+              </PrivateRoute>
+            }
+          />
+
+          {/* 📊 VERKOPEN */}
+          <Route
+            path="/sales"
+            element={
+              <PrivateRoute>
+                <Sales />
+              </PrivateRoute>
+            }
+          />
+
+          {/* 🧾 AANKOPEN */}
+          <Route
+            path="/purchases"
+            element={
+              <PrivateRoute>
+                <Purchases />
               </PrivateRoute>
             }
           />
